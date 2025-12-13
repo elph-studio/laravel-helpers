@@ -52,14 +52,14 @@ if (function_exists('collectDirectories') === false) {
 }
 
 if (function_exists('isJson') === false) {
-    function isJson($string): bool
+    function isJson($data): bool
     {
-        if (is_string($string) === false) {
+        if (is_string($data) === false) {
             return false;
         }
 
         try {
-            return is_array(json_decode($string, true, 512, JSON_THROW_ON_ERROR));
+            return is_array(json_decode($data, true, 512, JSON_THROW_ON_ERROR));
         } catch (JsonException) {
             return false;
         }
