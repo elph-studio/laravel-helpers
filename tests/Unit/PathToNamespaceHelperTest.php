@@ -2,13 +2,13 @@
 
 declare(strict_types=1);
 
-namespace Test\Integration;
+namespace Test\Unit;
 
-use Elph\LaravelTesting\Test\TestCase\IntegrationTestCase;
+use Elph\LaravelTesting\Test\TestCase\UnitTestCase;
 use Generator;
 use PHPUnit\Framework\Attributes\DataProvider;
 
-class NamespaceGeneratorTest extends IntegrationTestCase
+class PathToNamespaceHelperTest extends UnitTestCase
 {
     protected function setUp(): void
     {
@@ -36,8 +36,8 @@ class NamespaceGeneratorTest extends IntegrationTestCase
         ];
 
         yield 'Local test level Class' => [
-            'filePath' => 'tests/Integration/NamespaceGeneratorTest.php',
-            'expectedClass' => \Test\Integration\NamespaceGeneratorTest::class,
+            'filePath' => 'tests/Unit/PathToNamespaceHelperTest.php',
+            'expectedClass' => \Test\Unit\PathToNamespaceHelperTest::class,
         ];
 
         yield 'External Elph library level Class' => [
