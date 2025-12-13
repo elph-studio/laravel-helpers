@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Elph\LaravelHelpers\Helper;
 
+use Elph\LaravelHelpers\Entity\Environment;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
@@ -83,6 +84,12 @@ class NamespaceGenerator
 
     private function getComposerNamespaces(): Collection
     {
+        if (Environment::isServerSide() === false) {
+            return $this
+                ->getLocalComposerNamespaces()
+                ->merge($this->getPackagesNamespaces());
+        }
+
         if (File::exists(self::COMPOSER_NAMESPACES_CACHE) === false) {
             $this->setupComposerNamespaces();
         }

@@ -314,15 +314,15 @@ class PathScannerHelperTest extends UnitTestCase
             ],
         ];
 
-//        yield 'Depth level 1 & only php+txt' => [
-//            'scanPath' => self::INITIAL_DIRECTORY,
-//            'depth' => 1,
-//            'suffixes' => ['php', 'txt'],
-//            'expected' => [
-//                'PathScannerHelperTest/init.php',
-//                'PathScannerHelperTest/init.txt',
-//            ],
-//        ];
+        yield 'Depth level 1 & only php+txt' => [
+            'scanPath' => self::INITIAL_DIRECTORY,
+            'depth' => 1,
+            'suffixes' => ['php', 'txt'],
+            'expected' => [
+                'PathScannerHelperTest/init.php',
+                'PathScannerHelperTest/init.txt',
+            ],
+        ];
     }
 
     private function createDirectories(): void
