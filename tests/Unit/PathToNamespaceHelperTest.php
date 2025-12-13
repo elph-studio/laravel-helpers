@@ -14,8 +14,8 @@ class PathToNamespaceHelperTest extends UnitTestCase
     {
         parent::setUp();
 
-        // Default library tests basepath is `/tmp`, so it need to be changed before running this test
-        $this->app->setBasePath('/app');
+        // Default library tests basepath is `/tmp`, so it needs to be changed before running this test
+        $this->app->setBasePath(__DIR__ . '/../..');
     }
 
     #[DataProvider('dataForCorrectClassGeneration')]
