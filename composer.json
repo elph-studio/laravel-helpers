@@ -32,6 +32,14 @@
             "Test\\": "tests"
         }
     },
+    "scripts": {
+        "post-install-cmd": [
+            "@php src/Helper/Plain/VendorFixer.php"
+        ],
+        "post-update-cmd": [
+            "@php src/Helper/Plain/VendorFixer.php"
+        ]
+    },
     "minimum-stability": "stable",
     "config": {
         "allow-plugins": {
