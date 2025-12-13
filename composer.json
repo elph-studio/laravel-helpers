@@ -1,9 +1,9 @@
 {
-    "name": "elph-studio/{LIBRARY}",
+    "name": "elph-studio/laravel-helpers",
     "type": "library",
-    "description": "",
+    "description": "Laravel helpers and core functionality updates",
     "license": "MIT",
-    "keywords": [],
+    "keywords": ["laravel", "helpers"],
     "authors": [{
         "name": "Elephant Studio",
         "email": "developers@elph.studio",
@@ -13,7 +13,7 @@
         "php": "^8.5"
     },
     "require-dev": {
-        "elph-studio/laravel-testing-tools": "*",
+        "elph-studio/laravel-testing-tools": "^0.3",
         "phpunit/phpunit": "12.*",
         "mockery/mockery": "1.*",
         "roave/security-advisories": "dev-latest",
@@ -21,13 +21,24 @@
     },
     "autoload": {
         "psr-4": {
-            "Elph\\{LIBRARY}\\": "src"
-        }
+            "Elph\\LaravelHelpers\\": "src"
+        },
+        "files": [
+            "src/Helper/Helper.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
             "Test\\": "tests"
         }
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "@php src/Helper/Plain/VendorFixer.php"
+        ],
+        "post-update-cmd": [
+            "@php src/Helper/Plain/VendorFixer.php"
+        ]
     },
     "minimum-stability": "stable",
     "config": {
