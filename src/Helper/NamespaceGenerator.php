@@ -78,7 +78,7 @@ class NamespaceGenerator
 
                     return false;
                 }
-        );
+            );
     }
 
     private function getComposerNamespaces(): Collection
@@ -133,13 +133,15 @@ class NamespaceGenerator
                 collect($content['autoload']['psr-4'] ?? [])
                     ->each(function (array|string $path, string $namespace) use (&$namespaces, $pathToPackage) {
                         if (is_string($path) === true) {
-                            $this->appendNamespaces($namespaces, $pathToPackage . DIRECTORY_SEPARATOR . $path, $namespace);
+                            $path = $pathToPackage . DIRECTORY_SEPARATOR . $path;
+                            $this->appendNamespaces($namespaces, $path, $namespace);
 
                             return;
                         }
 
                         collect($path)->each(function (string $path) use (&$namespaces, $pathToPackage, $namespace) {
-                            $this->appendNamespaces($namespaces, $pathToPackage . DIRECTORY_SEPARATOR . $path, $namespace);
+                            $path = $pathToPackage . DIRECTORY_SEPARATOR . $path;
+                            $this->appendNamespaces($namespaces, $path, $namespace);
                         });
                     });
             });

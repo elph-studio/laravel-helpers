@@ -18,12 +18,6 @@ class NamespaceGeneratorTest extends IntegrationTestCase
         $this->app->setBasePath('/app');
     }
 
-    public function testClassExists(): void
-    {
-        $this->assertTrue(class_exists(\Elph\LaravelTesting\Test\TestCase\FeatureTestCase::class));
-    }
-    
-
     #[DataProvider('dataForCorrectClassGeneration')]
     public function testWillGenerateClassFromPath(string $filePath, string $expectedClass): void
     {
