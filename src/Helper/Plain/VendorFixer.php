@@ -141,9 +141,11 @@ return new class () {
             }
 
             $fullPath = self::VENDOR_FIXER_PACKAGES_LOCATION . DIRECTORY_SEPARATOR . $item;
-            if (is_dir($fullPath)) {
-                $packages[] = $fullPath . DIRECTORY_SEPARATOR . self::VENDOR_FIXER_PACKAGES_CONFIG;
+            if (is_dir($fullPath) === false) {
+                continue;
             }
+
+            $packages[] = $fullPath . DIRECTORY_SEPARATOR . self::VENDOR_FIXER_PACKAGES_CONFIG;
         }
 
         return $packages;
