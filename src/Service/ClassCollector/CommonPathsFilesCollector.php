@@ -6,7 +6,7 @@ namespace Elph\LaravelHelpers\Service\ClassCollector;
 
 use Illuminate\Support\Collection;
 
-class CommonPathsFilesCollector extends ClassCollector
+class CommonPathsFilesCollector extends CommonPathsCollector
 {
     public function __construct(private readonly string $entity, private readonly string $suffix)
     {
@@ -20,7 +20,7 @@ class CommonPathsFilesCollector extends ClassCollector
     protected function collect(): Collection
     {
         $files = new Collection();
-        collect(config('common_paths.' . $this->getEntity()))
+        $this->getCommonPathsConfig($this->getEntity())
             ->each(function ($path) use (&$files) {
                 $files = $files->merge(
                     collectFiles($path, 1000, [$this->suffix])->toArray()

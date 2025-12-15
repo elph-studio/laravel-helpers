@@ -6,7 +6,7 @@ namespace Elph\LaravelHelpers\Service\ClassCollector;
 
 use Illuminate\Support\Collection;
 
-class CommonPathsFoldersCollector extends ClassCollector
+class CommonPathsFoldersCollector extends CommonPathsCollector
 {
     protected const string CACHE_LOCATION = '/tmp/laravel_cache/%s_folders.php';
 
@@ -22,7 +22,7 @@ class CommonPathsFoldersCollector extends ClassCollector
     protected function collect(): Collection
     {
         $folders = new Collection();
-        collect(config('common_paths.' . $this->getEntity()))
+        $this->getCommonPathsConfig($this->getEntity())
             ->each(static function ($path) use (&$folders) {
                 $folders = $folders->merge(
                     collectDirectories($path, 1000)->toArray()
