@@ -25,7 +25,7 @@ abstract class CommonPathsCollector extends ClassCollector
 
         $config = [];
         collect(self::COMMON_PATHS_CONFIG_LOCATION)
-            ->each(function (string $path) use (&$config, $entity) {
+            ->each(static function (string $path) use (&$config, $entity) {
                 if (File::exists($path) === false) {
                     return true;
                 }
