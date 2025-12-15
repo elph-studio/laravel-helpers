@@ -12,12 +12,12 @@ use RuntimeException;
  * It is used to rewrite small blocks of vendors libraries or any other text files that are auto-generated,
  * but needs to be modified before launching them in production.
  *
- * Default list of changes is specified in src/Config/vendor_fixer.php, and it can be overwritten or extended
- * in application by adding config/vendor_fixer.php.
- * Custom config can be also specified when running script:
+ * Default list of changes concatenated from vendor/elph-studio/{package}/src/Config/vendor_fixer.php packages configs,
+ * and it can be extended in application by adding config/vendor_fixer.php.
+ * Custom config can be also specified when running script, this way all vendor_fixer configs will be ignored:
  * vendor/elph-studio/laravel-helpers/src/Helper/Plain/VendorFixer.php --config=path/to/custom/config/vendor_fixer.php
  *
- * By default, if specified to overwrite file of line inside of it are not found, script will skip them.
+ * By default, if specified to overwrite file or line inside of it are not found, script will skip them.
  *
  * To run this script automatically, add these commands to compose.json of your project:
     "scripts": {
@@ -33,9 +33,11 @@ use RuntimeException;
  * phpcs:disable Generic.Strings.UnnecessaryStringConcat.Found
  */
 return new class () {
-    private const array VENDOR_FIXER_CONFIG_LOCATIONS = [
+    private const string VENDOR_FIXER_PACKAGES_LOCATION = 'vendor/elph-studio';
+    private const string VENDOR_FIXER_PACKAGES_CONFIG = 'src/Config/vendor_fixer.php';
+
+    private const array VENDOR_FIXER_OTHER_CONFIG_LOCATIONS = [
         'config/vendor_fixer.php',
-        'vendor/elph-studio/laravel-helpers/src/Config/vendor_fixer.php',
         'src/Config/vendor_fixer.php',
     ];
 
@@ -80,17 +82,7 @@ return new class () {
             return $customConfig;
         }
 
-        foreach (self::VENDOR_FIXER_CONFIG_LOCATIONS as $location) {
-            if (file_exists($location) === false) {
-                continue;
-            }
-
-            $config = require $location;
-
-            return $config['replace_content'];
-        }
-
-        throw new RuntimeException('Could not find vendor_fixer.php config');
+        return $this->collectVendorFixerConfigs();
     }
 
     private function loadCustomConfig(): array|null
@@ -108,5 +100,60 @@ return new class () {
         $config = require $location;
 
         return $config['replace_content'];
+    }
+
+    private function collectVendorFixerConfigs(): array
+    {
+        $possibleConfigs = array_merge(
+            self::VENDOR_FIXER_OTHER_CONFIG_LOCATIONS,
+            $this->getPackagesLocations()
+        );
+
+        $vendorFixerConfig = [];
+        foreach ($possibleConfigs as $possibleConfig) {
+            if (file_exists($possibleConfig) === false) {
+                continue;
+            }
+
+            $config = require $possibleConfig;
+            if (array_key_exists('replace_content', $config) === false) {
+                continue;
+            }
+
+            foreach ($config['replace_content'] as $file => $replacements) {
+                if (array_key_exists($file, $vendorFixerConfig) === false) {
+                    $vendorFixerConfig[$file] = $replacements;
+
+                    continue;
+                }
+
+                $vendorFixerConfig[$file] = array_merge($vendorFixerConfig[$file], $replacements);
+            }
+        }
+
+        return $vendorFixerConfig;
+    }
+
+    private function getPackagesLocations(): array
+    {
+        if (is_dir(self::VENDOR_FIXER_PACKAGES_LOCATION) === false) {
+            return [];
+        }
+
+        $packages = [];
+        foreach (scandir(self::VENDOR_FIXER_PACKAGES_LOCATION) as $item) {
+            if ($item === '.' || $item === '..') {
+                continue;
+            }
+
+            $fullPath = self::VENDOR_FIXER_PACKAGES_LOCATION . DIRECTORY_SEPARATOR . $item;
+            if (is_dir($fullPath) === false) {
+                continue;
+            }
+
+            $packages[] = $fullPath . DIRECTORY_SEPARATOR . self::VENDOR_FIXER_PACKAGES_CONFIG;
+        }
+
+        return $packages;
     }
 };
