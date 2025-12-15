@@ -54,7 +54,6 @@ return new class () {
             }
 
             $content = file_get_contents($file);
-            var_dump($content);
             $originalContent = $content;
             foreach ($replacements as $replacement) {
                 $content = str_replace($replacement['from'], $replacement['to'], $content);
@@ -122,11 +121,15 @@ return new class () {
             }
 
             foreach ($config['replace_content'] as $file => $replacements) {
-                $vendorFixerConfig[$file][] = $replacements;
+                if (array_key_exists($file, $vendorFixerConfig) === false) {
+                    $vendorFixerConfig[$file] = $replacements;
+
+                    continue;
+                }
+
+                $vendorFixerConfig[$file] = array_merge($vendorFixerConfig[$file], $replacements);
             }
         }
-
-        var_dump($vendorFixerConfig);
 
         return $vendorFixerConfig;
     }
