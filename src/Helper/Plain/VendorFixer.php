@@ -54,6 +54,7 @@ return new class () {
             }
 
             $content = file_get_contents($file);
+            var_dump($content);
             $originalContent = $content;
             foreach ($replacements as $replacement) {
                 $content = str_replace($replacement['from'], $replacement['to'], $content);
@@ -124,6 +125,8 @@ return new class () {
                 $vendorFixerConfig[$file][] = $replacements;
             }
         }
+
+        var_dump($vendorFixerConfig);
 
         return $vendorFixerConfig;
     }
